@@ -7,9 +7,15 @@ const typeDefs = gql`
     wards: [Ward]
   }
 
+  type Mutation {
+    addHospital(name: String!): Hospital
+    addWard(name: String!, hospitalId: ID!): Ward
+    addRoom(name: String!, wardId: ID!): Room
+    addBed(name: String!, RoomId: ID!): Bed
+    addDevice(deviceType: DeviceType!, BedId: ID!): Device
+  }
+
   type Organization {
-    id: ID!
-    name: String!
     hospitals: [Hospital]!
   }
 
