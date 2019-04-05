@@ -25,6 +25,19 @@ class MongoAPI extends DataSource {
   //   const laws = await this.store.Law.find();
   //   return laws;
   // }
+
+  async getHospitals() {
+    const hospitals = this.store.Hospital.find();
+    return hospitals;
+  }
+
+  async getWards(hospitalId) {
+    // TODO: understand why hospital is the id here
+    const wards = this.store.Ward.find(
+      hospitalId ? { parent: hospitalId } : null
+    );
+    return wards;
+  }
 }
 
 module.exports = MongoAPI;
