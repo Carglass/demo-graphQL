@@ -9,10 +9,10 @@ const typeDefs = gql`
 
   type Mutation {
     addHospital(name: String!): Hospital
-    addWard(name: String!, hospitalId: ID!): Ward
-    addRoom(name: String!, wardId: ID!): Room
-    addBed(name: String!, RoomId: ID!): Bed
-    addDevice(deviceType: DeviceType!, BedId: ID!): Device
+    addWard(name: String!, hospitalName: String!): Ward
+    addRoom(name: String!, wardName: String!): Room
+    addBed(name: String!, roomName: String!): Bed
+    addDevice(deviceType: DeviceType!, bedName: String!): Device
   }
 
   type Organization {
@@ -22,7 +22,7 @@ const typeDefs = gql`
   type Hospital {
     id: ID!
     name: String!
-    wards: [Ward]!
+    wards: [Ward]
   }
 
   type Ward {

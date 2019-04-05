@@ -43,5 +43,15 @@ module.exports = {
       const devices = await dataSources.mongoAPI.getDevices((bed = bed.id));
       return devices;
     }
+  },
+  Mutation: {
+    addHospital: async (_, { name }, { dataSources }) => {
+      const hospital = await dataSources.mongoAPI.createHospital(name);
+      return hospital;
+    },
+    addWard: async (_, { name, hospitalName }, { dataSources }) => {
+      const ward = await dataSources.mongoAPI.createWard(name, hospitalName);
+      return ward;
+    }
   }
 };

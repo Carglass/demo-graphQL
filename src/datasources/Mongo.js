@@ -52,6 +52,33 @@ class MongoAPI extends DataSource {
     const devices = this.store.Device.find(bedId ? { parent: bedId } : null);
     return devices;
   }
+
+  /**
+   * @param  {string} name
+   * @returns  {Promise|Error} returns the promise of the creation of the Hospital or an Error
+   */
+  createHospital(name) {
+    if (name) {
+      return this.store.Hospital.create({ name });
+    } else {
+      return new Error("Hospital must have a name");
+    }
+  }
+
+  /**
+   * @param  {string} name
+   * @param  {string} parent - the name of the parent (not the id)
+   * @returns  {Promise|Error} - returns the promise of the creation of the Ward or an Error
+   */
+  async createWard(name, parent) {
+    if (name && parent) {
+      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
+      const hospitalId = await this.store.Hospital.findOne({ name: parent });
+      return this.store.Ward.create({ name: name, parent: hospitalId._id });
+    } else {
+      return new Error("Ward must have a name");
+    }
+  }
 }
 
 module.exports = MongoAPI;
