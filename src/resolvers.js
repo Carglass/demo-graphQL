@@ -21,5 +21,27 @@ module.exports = {
       );
       return wards;
     }
+  },
+  Ward: {
+    rooms: async (ward, __, { dataSources }) => {
+      const rooms = await dataSources.mongoAPI.getRooms((ward = ward.id));
+      return rooms;
+    },
+    deviceSummaries: (ward, __, { dataSources }) => {
+      // TODO: Code the logic to determine the summary for each device type
+      return null;
+    }
+  },
+  Room: {
+    beds: async (room, __, { dataSources }) => {
+      const beds = await dataSources.mongoAPI.getBeds((room = room.id));
+      return beds;
+    }
+  },
+  Bed: {
+    devices: async (bed, __, { dataSources }) => {
+      const devices = await dataSources.mongoAPI.getDevices((bed = bed.id));
+      return devices;
+    }
   }
 };

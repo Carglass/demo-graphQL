@@ -32,11 +32,25 @@ class MongoAPI extends DataSource {
   }
 
   async getWards(hospitalId) {
-    // TODO: understand why hospital is the id here
     const wards = this.store.Ward.find(
       hospitalId ? { parent: hospitalId } : null
     );
     return wards;
+  }
+
+  async getRooms(wardId) {
+    const rooms = this.store.Room.find(wardId ? { parent: wardId } : null);
+    return rooms;
+  }
+
+  async getBeds(roomId) {
+    const beds = this.store.Bed.find(roomId ? { parent: roomId } : null);
+    return beds;
+  }
+
+  async getDevices(bedId) {
+    const devices = this.store.Device.find(bedId ? { parent: bedId } : null);
+    return devices;
   }
 }
 
