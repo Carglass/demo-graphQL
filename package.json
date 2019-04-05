@@ -4,8 +4,10 @@
   "description": "A simple app to demonstrate the possibilities of graphQL",
   "main": "index.js",
   "dependencies": {
+    "apollo-datasource": "^0.3.1",
     "apollo-server": "^2.4.8",
-    "graphql": "^14.2.1"
+    "graphql": "^14.2.1",
+    "mongoose": "^5.4.22"
   },
   "devDependencies": {},
   "scripts": {
