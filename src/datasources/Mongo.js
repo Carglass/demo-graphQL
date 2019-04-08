@@ -79,6 +79,36 @@ class MongoAPI extends DataSource {
       return new Error("Ward must have a name");
     }
   }
+
+  /**
+   * @param  {string} name
+   * @param  {string} parent - the name of the parent (not the id)
+   * @returns  {Promise|Error} - returns the promise of the creation of the Ward or an Error
+   */
+  async createRoom(name, parent) {
+    if (name && parent) {
+      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
+      const wardId = await this.store.Ward.findOne({ name: parent });
+      return this.store.Room.create({ name: name, parent: wardId._id });
+    } else {
+      return new Error("Room must have a name");
+    }
+  }
+
+  /**
+   * @param  {string} name
+   * @param  {string} parent - the name of the parent (not the id)
+   * @returns  {Promise|Error} - returns the promise of the creation of the Ward or an Error
+   */
+  async createBed(name, parent) {
+    if (name && parent) {
+      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
+      const roomId = await this.store.Room.findOne({ name: parent });
+      return this.store.Bed.create({ name: name, parent: roomId._id });
+    } else {
+      return new Error("Bed must have a name");
+    }
+  }
 }
 
 module.exports = MongoAPI;

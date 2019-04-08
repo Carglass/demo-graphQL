@@ -5,7 +5,8 @@ const RoomSchema = new Schema({
   // `name` is of type String
   name: {
     type: Schema.Types.String,
-    required: true
+    required: true,
+    unique: true
   },
   parent: {
     type: Schema.Types.ObjectId,

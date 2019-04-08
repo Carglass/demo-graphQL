@@ -5,7 +5,8 @@ const HospitalSchema = new Schema({
   // `name` is of type String
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   }
 });
 

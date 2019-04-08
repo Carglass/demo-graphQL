@@ -52,6 +52,14 @@ module.exports = {
     addWard: async (_, { name, hospitalName }, { dataSources }) => {
       const ward = await dataSources.mongoAPI.createWard(name, hospitalName);
       return ward;
+    },
+    addRoom: async (_, { name, wardName }, { dataSources }) => {
+      const room = await dataSources.mongoAPI.createRoom(name, wardName);
+      return room;
+    },
+    addBed: async (_, { name, roomName }, { dataSources }) => {
+      const bed = await dataSources.mongoAPI.createBed(name, roomName);
+      return bed;
     }
   }
 };
