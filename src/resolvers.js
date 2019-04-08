@@ -5,18 +5,14 @@ module.exports = {
       organization.hospitals = await dataSources.mongoAPI.getHospitals();
       return organization;
     },
-    hospitals: async (_, __, { dataSources }) => {
-      const hospitals = await dataSources.mongoAPI.getHospitals();
-      return hospitals;
+    hospital: async (_, { name }, { dataSources }) => {
+      const hospital = await dataSources.mongoAPI.getOneHospital(name);
+      return hospital;
     },
-    wards: async (_, __, { dataSources }) => {
-      const wards = await dataSources.mongoAPI.getWards();
-      return wards;
+    ward: async (_, { name }, { dataSources }) => {
+      const ward = await dataSources.mongoAPI.getOneWard(name);
+      return ward;
     }
-    // hospital: async (_, { name }, { dataSources }) => {
-    //   const hospital = await dataSources.mongoAPI.getHospitals({ name });
-    //   return hospital;
-    // }
   },
   Hospital: {
     wards: async (hospital, __, { dataSources }) => {

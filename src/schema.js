@@ -3,8 +3,6 @@ const { gql } = require("apollo-server");
 const typeDefs = gql`
   type Query {
     organization: Organization
-    hospitals: [Hospital]
-    wards: [Ward]
     hospital(name: String!): Hospital
     ward(name: String!): Ward
   }

@@ -23,11 +23,29 @@ class MongoAPI extends DataSource {
    */
 
   /**
-   * @returns {Promise|Error} returns the Promise of the hospitals search
+   * @returns {Array} returns an Hospital Array from Mongo
    */
   async getHospitals() {
     const hospitals = this.store.Hospital.find();
     return hospitals;
+  }
+
+  /**
+   * @param  {string} hospitalName
+   * @returns {Object} returns an Hospital Object from Mongo
+   */
+  async getOneHospital(hospitalName) {
+    const hospital = await this.store.Hospital.findOne({ name: hospitalName });
+    return hospital;
+  }
+
+  /**
+   * @param  {string} wardName
+   * @returns {Object} returns a Ward Object from Mongo
+   */
+  async getOneWard(wardName) {
+    const ward = await this.store.Ward.findOne({ name: wardName });
+    return ward;
   }
 
   async getWards(hospitalId) {
