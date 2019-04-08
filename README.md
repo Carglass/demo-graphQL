@@ -18,7 +18,9 @@ Then you can clone this repo, and open it in your favorite terminal, and follow 
 `npm i` to install the dependencies
 
 Then in two different terminals:
+
 `mongod` to start mongo
+
 `npm start` to start the demo
 
 Then open your favorite browser at the following adress: http://localhost:4000/
