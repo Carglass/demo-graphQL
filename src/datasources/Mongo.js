@@ -21,11 +21,10 @@ class MongoAPI extends DataSource {
    * have to be. If the user is already on the context, it will use that user
    * instead
    */
-  // async getLaws() {
-  //   const laws = await this.store.Law.find();
-  //   return laws;
-  // }
 
+  /**
+   * @returns {Promise|Error} returns the Promise of the hospitals search
+   */
   async getHospitals() {
     const hospitals = this.store.Hospital.find();
     return hospitals;
@@ -33,22 +32,26 @@ class MongoAPI extends DataSource {
 
   async getWards(hospitalId) {
     const wards = this.store.Ward.find(
+      // if there is no parent precised, returns all wards
       hospitalId ? { parent: hospitalId } : null
     );
     return wards;
   }
 
   async getRooms(wardId) {
+    // see getWards
     const rooms = this.store.Room.find(wardId ? { parent: wardId } : null);
     return rooms;
   }
 
   async getBeds(roomId) {
+    // see getWards
     const beds = this.store.Bed.find(roomId ? { parent: roomId } : null);
     return beds;
   }
 
   async getDevices(bedId) {
+    // see getWards
     const devices = this.store.Device.find(bedId ? { parent: bedId } : null);
     return devices;
   }
@@ -72,9 +75,9 @@ class MongoAPI extends DataSource {
    */
   async createWard(name, parent) {
     if (name && parent) {
-      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
+      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why? maybe because it was not defined as unique in mongoose
       const hospitalId = await this.store.Hospital.findOne({ name: parent });
-      return this.store.Ward.create({ name: name, parent: hospitalId._id });
+      return this.store.Ward.create({ name, parent: hospitalId._id });
     } else {
       return new Error("Ward must have a name");
     }
@@ -87,9 +90,8 @@ class MongoAPI extends DataSource {
    */
   async createRoom(name, parent) {
     if (name && parent) {
-      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
       const wardId = await this.store.Ward.findOne({ name: parent });
-      return this.store.Room.create({ name: name, parent: wardId._id });
+      return this.store.Room.create({ name, parent: wardId._id });
     } else {
       return new Error("Room must have a name");
     }
@@ -102,11 +104,24 @@ class MongoAPI extends DataSource {
    */
   async createBed(name, parent) {
     if (name && parent) {
-      // TODO: here find returned an array (of size 1), but bot in the other funcitons, why?
       const roomId = await this.store.Room.findOne({ name: parent });
-      return this.store.Bed.create({ name: name, parent: roomId._id });
+      return this.store.Bed.create({ name, parent: roomId._id });
     } else {
       return new Error("Bed must have a name");
+    }
+  }
+
+  /**
+   * @param  {string} deviceType
+   * @param  {string} parent - the name of the parent (not the id)
+   * @returns  {Promise|Error} - returns the promise of the creation of the Ward or an Error
+   */
+  async createDevice(deviceType, parent) {
+    if (deviceType && parent) {
+      const bedId = await this.store.Bed.findOne({ name: parent });
+      return this.store.Device.create({ deviceType, parent: bedId._id });
+    } else {
+      return new Error("Device must have a device type and a parent");
     }
   }
 }

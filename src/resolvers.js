@@ -60,6 +60,13 @@ module.exports = {
     addBed: async (_, { name, roomName }, { dataSources }) => {
       const bed = await dataSources.mongoAPI.createBed(name, roomName);
       return bed;
+    },
+    addDevice: async (_, { deviceType, bedName }, { dataSources }) => {
+      const device = await dataSources.mongoAPI.createDevice(
+        deviceType,
+        bedName
+      );
+      return device;
     }
   }
 };
