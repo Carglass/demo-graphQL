@@ -13,18 +13,20 @@ module.exports = {
       const wards = await dataSources.mongoAPI.getWards();
       return wards;
     }
+    // hospital: async (_, { name }, { dataSources }) => {
+    //   const hospital = await dataSources.mongoAPI.getHospitals({ name });
+    //   return hospital;
+    // }
   },
   Hospital: {
     wards: async (hospital, __, { dataSources }) => {
-      const wards = await dataSources.mongoAPI.getWards(
-        (hospital = hospital.id)
-      );
+      const wards = await dataSources.mongoAPI.getWards(hospital.id);
       return wards;
     }
   },
   Ward: {
     rooms: async (ward, __, { dataSources }) => {
-      const rooms = await dataSources.mongoAPI.getRooms((ward = ward.id));
+      const rooms = await dataSources.mongoAPI.getRooms(ward.id);
       return rooms;
     },
     deviceSummaries: (ward, __, { dataSources }) => {
@@ -34,13 +36,13 @@ module.exports = {
   },
   Room: {
     beds: async (room, __, { dataSources }) => {
-      const beds = await dataSources.mongoAPI.getBeds((room = room.id));
+      const beds = await dataSources.mongoAPI.getBeds(room.id);
       return beds;
     }
   },
   Bed: {
     devices: async (bed, __, { dataSources }) => {
-      const devices = await dataSources.mongoAPI.getDevices((bed = bed.id));
+      const devices = await dataSources.mongoAPI.getDevices(bed.id);
       return devices;
     }
   },

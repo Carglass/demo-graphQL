@@ -5,6 +5,8 @@ const typeDefs = gql`
     organization: Organization
     hospitals: [Hospital]
     wards: [Ward]
+    hospital(name: String!): Hospital
+    ward(name: String!): Ward
   }
 
   type Mutation {
