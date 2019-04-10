@@ -142,6 +142,49 @@ class MongoAPI extends DataSource {
       return new Error("Device must have a device type and a parent");
     }
   }
+
+  /**
+   * @param  {string} wardId is the mongo ID of the ward for which to generate the summary
+   * @returns {Array} an array of summaries by device type
+   */
+  async getWardDeviceSummaries(wardId) {
+    let deviceSummaries = [];
+    const beds = await this.getBedsFromWard(wardId);
+    deviceSummaries = await this.getSummariesFromBeds(beds);
+    return deviceSummaries;
+  }
+
+  /**
+   * @param  {string} wardId
+   * @returns {Array} beds - an array of ids of all the beds in the ward
+   */
+  async getBedsFromWard(wardId) {
+    const rooms = await this.store.Room.find({ parent: wardId });
+    const beds = await this.store.Bed.find()
+      .where("parent")
+      .in(rooms.map(room => room._id));
+    return beds;
+  }
+
+  /**
+   * @param  {Array} bedList
+   * @returns  {Array} summaries, an array of {deviceType, number}
+   */
+  async getSummariesFromBeds(bedList) {
+    let summaries = [
+      { deviceType: "VP", number: 0 },
+      { deviceType: "SP", number: 0 }
+    ];
+    summaries[0].number = await this.store.Device.find({ deviceType: "VP" })
+      .where("parent")
+      .in(bedList)
+      .count();
+    summaries[1].number = await this.store.Device.find({ deviceType: "SP" })
+      .where("parent")
+      .in(bedList)
+      .count();
+    return summaries;
+  }
 }
 
 module.exports = MongoAPI;

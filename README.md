@@ -23,6 +23,6 @@ Then in two different terminals:
 
 `npm start` to start the demo
 
-Then open your favorite browser at the following adress: http://localhost:4000/
+Then open your favorite browser at the following adress: [local server adress](http://localhost:4000/)
 
 ## How to use the demo

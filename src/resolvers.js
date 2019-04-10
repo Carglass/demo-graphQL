@@ -25,9 +25,11 @@ module.exports = {
       const rooms = await dataSources.mongoAPI.getRooms(ward.id);
       return rooms;
     },
-    deviceSummaries: (ward, __, { dataSources }) => {
-      // TODO: Code the logic to determine the summary for each device type
-      return null;
+    deviceSummaries: async (ward, __, { dataSources }) => {
+      const deviceSummaries = await dataSources.mongoAPI.getWardDeviceSummaries(
+        ward.id
+      );
+      return deviceSummaries;
     }
   },
   Room: {
