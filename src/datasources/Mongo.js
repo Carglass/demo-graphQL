@@ -159,7 +159,9 @@ class MongoAPI extends DataSource {
    * @returns {Array} beds - an array of ids of all the beds in the ward
    */
   async getBedsFromWard(wardId) {
+    // retrieve all rooms in the ward
     const rooms = await this.store.Room.find({ parent: wardId });
+    // retrieve all beds in the rooms
     const beds = await this.store.Bed.find()
       .where("parent")
       .in(rooms.map(room => room._id));
@@ -171,6 +173,8 @@ class MongoAPI extends DataSource {
    * @returns  {Array} summaries, an array of {deviceType, number}
    */
   async getSummariesFromBeds(bedList) {
+    // TODO: could be refactored into an object? maybe more idiomatic
+    // would need to change the schema as well then
     let summaries = [
       { deviceType: "VP", number: 0 },
       { deviceType: "SP", number: 0 }
