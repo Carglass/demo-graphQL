@@ -14,8 +14,12 @@ const dataSources = () => ({
 
 const server = new ApolloServer({ typeDefs, dataSources, resolvers });
 
-connect("mongodb://localhost/demo-graphql").then(() => {
-  server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
-  });
-});
+connect(process.env.MONGODB_URI || "mongodb://localhost/demo-graphql").then(
+  () => {
+    server
+      .listen(process.env.PORT || 4000, process.env.HOST || null)
+      .then(({ url }) => {
+        console.log(`🚀 Server ready at ${url}`);
+      });
+  }
+);
