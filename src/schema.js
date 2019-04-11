@@ -13,7 +13,11 @@ const typeDefs = gql`
     addRoom(name: String!, wardName: String!): Room
     addBed(name: String!, roomName: String!): Bed
     addDevice(deviceType: DeviceType!, bedName: String!): Device
-    deleteHospital(name: String!): Status
+    deleteHospital(
+      name: String!
+      childrenmgt: ChildrenDeletion
+      moveTarget: String!
+    ): Status
     deleteWard(name: String!): Status
     deleteRoom(name: String!): Status
     deleteBed(name: String!): Status
@@ -67,6 +71,11 @@ const typeDefs = gql`
   enum Status {
     OK
     NOK
+  }
+
+  enum ChildrenDeletion {
+    DESTROY
+    MOVE
   }
 `;
 
