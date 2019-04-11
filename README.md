@@ -4,7 +4,7 @@ This app aims at demonstrating some of the possibilities of GraphQL through the 
 
 This will be demonstrated following this [presentation](https://docs.google.com/presentation/d/11OfsAd1razkH7hCJjKi2ZPvJchqKxdlBdS7prbX7y_Q/edit?usp=sharing)
 
-This is also hosted as live demo on Heroku (link coming soon)
+This is also hosted as live demo on [Heroku](https://demo-graphql-maxb.herokuapp.com/)
 
 ## How to install on your computer
 
