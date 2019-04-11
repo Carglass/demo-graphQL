@@ -12,7 +12,13 @@ const dataSources = () => ({
   mongoAPI: new MongoAPI({ store })
 });
 
-const server = new ApolloServer({ typeDefs, dataSources, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  dataSources,
+  resolvers,
+  introspection: true,
+  playground: true
+});
 
 connect(process.env.MONGODB_URI || "mongodb://localhost/demo-graphql").then(
   () => {
