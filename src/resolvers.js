@@ -67,6 +67,10 @@ module.exports = {
         bedName
       );
       return device;
+    },
+    deleteHospital: async (_, { name }, { dataSources }) => {
+      const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
+      return mongoStatus ? "OK" : "NOK";
     }
   }
 };

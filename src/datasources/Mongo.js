@@ -189,6 +189,13 @@ class MongoAPI extends DataSource {
       .count();
     return summaries;
   }
+
+  async deleteHospital(hospitalName) {
+    const status = await this.store.Hospital.deleteOne({
+      name: hospitalName
+    });
+    return status.ok && status.n;
+  }
 }
 
 module.exports = MongoAPI;

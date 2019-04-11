@@ -13,11 +13,11 @@ const typeDefs = gql`
     addRoom(name: String!, wardName: String!): Room
     addBed(name: String!, roomName: String!): Bed
     addDevice(deviceType: DeviceType!, bedName: String!): Device
-    deleteHospital(name: String!): ID
-    deleteWard(name: String!): ID
-    deleteRoom(name: String!): ID
-    deleteBed(name: String!): ID
-    deleteDevice(guid: ID!): ID
+    deleteHospital(name: String!): Status
+    deleteWard(name: String!): Status
+    deleteRoom(name: String!): Status
+    deleteBed(name: String!): Status
+    deleteDevice(guid: ID!): Status
   }
 
   type Organization {
@@ -62,6 +62,11 @@ const typeDefs = gql`
   enum DeviceType {
     VP
     SP
+  }
+
+  enum Status {
+    OK
+    NOK
   }
 `;
 
