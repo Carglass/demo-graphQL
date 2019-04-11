@@ -13,6 +13,11 @@ const typeDefs = gql`
     addRoom(name: String!, wardName: String!): Room
     addBed(name: String!, roomName: String!): Bed
     addDevice(deviceType: DeviceType!, bedName: String!): Device
+    deleteHospital(name: String!): ID
+    deleteWard(name: String!): ID
+    deleteRoom(name: String!): ID
+    deleteBed(name: String!): ID
+    deleteDevice(guid: ID!): ID
   }
 
   type Organization {
