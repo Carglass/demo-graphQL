@@ -1,5 +1,7 @@
 const { DataSource } = require("apollo-datasource");
 
+const LEVELS_ARRAY = ["Hospital", "Ward", "Room", "Bed", "Device"];
+
 class MongoAPI extends DataSource {
   constructor({ store }) {
     super();
@@ -148,6 +150,7 @@ class MongoAPI extends DataSource {
    * @returns {Array} an array of summaries by device type
    */
   async getWardDeviceSummaries(wardId) {
+    // TODO: remove useless prime declaration ?
     let deviceSummaries = [];
     const beds = await this.getBedsFromWard(wardId);
     deviceSummaries = await this.getSummariesFromBeds(beds);
@@ -166,6 +169,76 @@ class MongoAPI extends DataSource {
       .where("parent")
       .in(rooms.map(room => room._id));
     return beds;
+  }
+
+  /**
+   * @param  {ID} locationID
+   * @param  {locationType} sourceLocationType
+   * @param  {locationType} finalLevelType
+   * @returns  {Object} listOfChildrenIds
+   */
+  async getAllChildrenLocations(
+    locationID,
+    sourceLocationType,
+    finalLevelType
+  ) {
+    // getting the levels, to enable a cursor move in the levels
+    const startLevel = this.getLevelIndex(sourceLocationType);
+    const finalLevel = this.getLevelIndex(finalLevelType);
+    if (finalLevel - startLevel <= 0) {
+      throw new Error("there is a wrong location Type somewhere");
+    }
+    // this cursor will mode to point to the next level
+    let cursor = startLevel;
+    // that's the number of levels to go in the tree
+    let numberOfLevelsToGo = finalLevel - startLevel;
+    // the object that will eventually be returned, with all the indexes classed by type
+    const listOfChildrenIds = { [sourceLocationType]: locationID };
+    while (numberOfLevelsToGo > 0) {
+      // get the list of the locations for which we want the children
+      const idsToSearch = listOfChildrenIds[this.getLevelType(cursor)];
+      // get all the childrens (full document)
+      const locations = await this.store[this.getLevelType(cursor + 1)]
+        .find()
+        .where("parent")
+        .in(idsToSearch);
+      // convert into an array of ids and update the listOfChildrenIds
+      listOfChildrenIds[this.getLevelType(cursor + 1)] = locations.map(
+        location => location._id
+      );
+      // move to next step
+      cursor++;
+      numberOfLevelsToGo--;
+    }
+    return listOfChildrenIds;
+  }
+
+  getLevelIndex(locationType) {
+    return locationType === "Hospital"
+      ? 0
+      : locationType === "Ward"
+      ? 1
+      : locationType === "Room"
+      ? 2
+      : locationType === "Bed"
+      ? 3
+      : locationType === "Device"
+      ? 4
+      : new Error("One Location Type is wrong");
+  }
+
+  getLevelType(locationIndex) {
+    return locationIndex === 0
+      ? "Hospital"
+      : locationIndex === 1
+      ? "Ward"
+      : locationIndex === 2
+      ? "Room"
+      : locationIndex === 3
+      ? "Bed"
+      : locationIndex === 4
+      ? "Device"
+      : new Error("One Location Index is wrong");
   }
 
   /**
@@ -195,6 +268,58 @@ class MongoAPI extends DataSource {
       name: hospitalName
     });
     return status.ok && status.n;
+  }
+
+  async moveChildren(name, locationType, moveTarget) {
+    // check that moveTarget and name are of the good location type
+    const doLocationsExist = await Promise.all([
+      this.store[locationType].find({ name }).count(),
+      this.store[locationType].find({ name: moveTarget }).count()
+    ]);
+    if (doLocationsExist[0] && doLocationsExist[1]) {
+      // get the ID of the moveTarget to do the update
+      const moveTargetMongoDoc = await this.store[locationType].findOne({
+        name: moveTarget
+      });
+      const targetID = moveTargetMongoDoc._id;
+      // get the ID of the hospital to delete
+      const moveSourceMongoDoc = await this.store[locationType].findOne({
+        name
+      });
+      const sourceID = moveSourceMongoDoc._id;
+      // TODO: look for all the children
+      const inter = await this.getAllChildrenLocations(
+        sourceID,
+        locationType,
+        this.getLevelType(this.getLevelIndex(locationType) + 1)
+      );
+      const childrenList =
+        inter[this.getLevelType(this.getLevelIndex(locationType) + 1)];
+      // TODO: get the length of the list
+      const numberOfChildrenToUpdate = childrenList.length;
+      // TODO: update all the children so they have a new parent
+      const mongoStatus = await this.store[
+        this.getLevelType(this.getLevelIndex(locationType) + 1)
+      ].updateMany(
+        { _id: { $in: childrenList } },
+        {
+          parent: targetID
+        }
+      );
+      // TODO: check that all were updated (from the result of updateMany)
+      if (mongoStatus.nModified === numberOfChildrenToUpdate) {
+        return true;
+      } else {
+        throw new Error("Something went wrong in the updateMany");
+      }
+    } else {
+      return new Error("one or both locations do not exist");
+    }
+  }
+
+  async deleteChildren(name, locationType) {
+    // TODO: implement :)
+    return new Error("function not implemented");
   }
 }
 

@@ -15,13 +15,14 @@ const typeDefs = gql`
     addDevice(deviceType: DeviceType!, bedName: String!): Device
     deleteHospital(
       name: String!
-      childrenmgt: ChildrenDeletion
-      moveTarget: String!
+      childrenMgt: ChildrenDeletion
+      moveTarget: String
     ): Status
     deleteWard(name: String!): Status
     deleteRoom(name: String!): Status
     deleteBed(name: String!): Status
     deleteDevice(guid: ID!): Status
+    reassignDevice(guid: ID!, moveTarget: String!): Status
   }
 
   type Organization {

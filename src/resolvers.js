@@ -68,9 +68,56 @@ module.exports = {
       );
       return device;
     },
-    deleteHospital: async (_, { name }, { dataSources }) => {
-      const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
-      return mongoStatus ? "OK" : "NOK";
+    deleteHospital: async (
+      _,
+      { name, childrenMgt, moveTarget },
+      { dataSources }
+    ) => {
+      // start by checking that there are indeed no children
+      if (!childrenMgt) {
+        // TODO: check that there are no children in Mongo
+        const childrenExist = true;
+        if (childrenExist) {
+          return new Error("Precise what to do with the children");
+        } else {
+          // go on with a simple destroy if there was no children indeed
+          const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
+          return mongoStatus ? "OK" : "NOK";
+        }
+      }
+
+      // then check that there is a move target if move is chosen
+      if (childrenMgt === "MOVE" && !moveTarget) {
+        return new Error("Precise where to move the children");
+      }
+
+      // then proceed with the treatment when there are children
+      if (childrenMgt === "DESTROY") {
+        const statusForChildrenDeletion = await dataSources.mongoAPI.deleteChildren(
+          "Hospital",
+          name
+        );
+        if (statusForChildrenDeletion) {
+          const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
+          return mongoStatus ? "OK" : "NOK";
+        } else {
+          return new Error("Something went wrong deleting children");
+        }
+      } else if (childrenMgt === "MOVE") {
+        const statusForChildrenMove = await dataSources.mongoAPI.moveChildren(
+          name,
+          "Hospital",
+          moveTarget
+        );
+        if (statusForChildrenMove) {
+          const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
+          return mongoStatus ? "OK" : "NOK";
+        } else {
+          return new Error("Something went wrong moving Children");
+        }
+      } else {
+        return new Error("Something went wrong");
+      }
     }
   }
 };
