@@ -272,6 +272,7 @@ class MongoAPI extends DataSource {
 
   async moveChildren(name, locationType, moveTarget) {
     // check that moveTarget and name are of the good location type
+    // TODO: as I need the IDs from those two, (see below), I should optimize to reduce the number of calls to mongo
     const doLocationsExist = await Promise.all([
       this.store[locationType].find({ name }).count(),
       this.store[locationType].find({ name: moveTarget }).count()
@@ -287,7 +288,7 @@ class MongoAPI extends DataSource {
         name
       });
       const sourceID = moveSourceMongoDoc._id;
-      // TODO: look for all the children
+      // look for all the children
       const inter = await this.getAllChildrenLocations(
         sourceID,
         locationType,
@@ -295,9 +296,9 @@ class MongoAPI extends DataSource {
       );
       const childrenList =
         inter[this.getLevelType(this.getLevelIndex(locationType) + 1)];
-      // TODO: get the length of the list
+      // get the length of the list
       const numberOfChildrenToUpdate = childrenList.length;
-      // TODO: update all the children so they have a new parent
+      // update all the children so they have a new parent
       const mongoStatus = await this.store[
         this.getLevelType(this.getLevelIndex(locationType) + 1)
       ].updateMany(
@@ -306,7 +307,7 @@ class MongoAPI extends DataSource {
           parent: targetID
         }
       );
-      // TODO: check that all were updated (from the result of updateMany)
+      // check that all were updated (from the result of updateMany)
       if (mongoStatus.nModified === numberOfChildrenToUpdate) {
         return true;
       } else {
