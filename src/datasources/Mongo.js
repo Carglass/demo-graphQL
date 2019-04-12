@@ -319,8 +319,41 @@ class MongoAPI extends DataSource {
   }
 
   async deleteChildren(name, locationType) {
-    // TODO: implement :)
-    return new Error("function not implemented");
+    // get the ID of the hospital to delete
+    const MongoDoc = await this.store[locationType].findOne({
+      name
+    });
+    let sourceID;
+    if (MongoDoc) {
+      sourceID = MongoDoc._id;
+    } else {
+      throw new Error("This ressource does not exist");
+    }
+    // look for all the children
+    const inter = await this.getAllChildrenLocations(
+      sourceID,
+      locationType,
+      "Device"
+    );
+    // TODO: iterate on inter keys to get the list at each level
+    // set a status Boolean
+    let statusToReturn = true;
+    Object.keys(inter).forEach(async locationTypeIter => {
+      // the origin deletion shall not be deleted at this point
+      if (locationTypeIter === locationType) return;
+      // getting the list of nodes to delete at this level
+      const childrenToDeleteForThisLevel = inter[locationTypeIter];
+      // delete them in Mongo
+      const mongoStatus = await this.store[locationTypeIter].deleteMany({
+        _id: { $in: childrenToDeleteForThisLevel }
+      });
+      // check that all were deleted (from the result of deleteMany) and set statusToReturn to false if something went wrong
+      if (mongoStatus.n !== childrenToDeleteForThisLevel.length) {
+        statusToReturn = false;
+      }
+    });
+    // returns true if all children were correctly deleted, else false
+    return statusToReturn;
   }
 }
 

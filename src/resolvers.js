@@ -94,8 +94,8 @@ module.exports = {
       // then proceed with the treatment when there are children
       if (childrenMgt === "DESTROY") {
         const statusForChildrenDeletion = await dataSources.mongoAPI.deleteChildren(
-          "Hospital",
-          name
+          name,
+          "Hospital"
         );
         if (statusForChildrenDeletion) {
           const mongoStatus = await dataSources.mongoAPI.deleteHospital(name);
