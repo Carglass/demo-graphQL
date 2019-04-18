@@ -110,11 +110,15 @@ const typeDefs = gql`
       """
       moveTarget: String
     ): Status
-    deleteWard(name: String!): Status
-    deleteRoom(name: String!): Status
-    deleteBed(name: String!): Status
-    deleteDevice(guid: ID!): Status
-    reassignDevice(guid: ID!, moveTarget: String!): Status
+    # deleteWard(name: String!): Status
+    # deleteRoom(name: String!): Status
+    # deleteBed(name: String!): Status
+    # deleteDevice(guid: ID!): Status
+    # reassignDevice(guid: ID!, moveTarget: String!): Status
+  }
+
+  type Subscription {
+    deviceAdded: Device
   }
 
   """

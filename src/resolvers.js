@@ -1,3 +1,8 @@
+const { PubSub } = require("apollo-server");
+
+const pubsub = new PubSub();
+const DEVICE_ADDED = "DEVICE_ADDED";
+
 module.exports = {
   Query: {
     organization: async (_, __, { dataSources }) => {
@@ -66,6 +71,7 @@ module.exports = {
         deviceType,
         bedName
       );
+      pubsub.publish(DEVICE_ADDED, { deviceAdded: device });
       return device;
     },
     deleteHospital: async (
@@ -124,6 +130,11 @@ module.exports = {
       } else {
         return new Error("Something went wrong");
       }
+    }
+  },
+  Subscription: {
+    deviceAdded: {
+      subscribe: () => pubsub.asyncIterator([DEVICE_ADDED])
     }
   }
 };
