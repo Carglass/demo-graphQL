@@ -284,6 +284,7 @@ class MongoAPI extends DataSource {
       });
       const targetID = moveTargetMongoDoc._id;
       // get the ID of the hospital to delete
+      // TODO: refactor to take the ID as an input
       const moveSourceMongoDoc = await this.store[locationType].findOne({
         name
       });
@@ -319,6 +320,7 @@ class MongoAPI extends DataSource {
   }
 
   async deleteChildren(name, locationType) {
+    // TODO: refactor the function to take the ID directly as an input
     // get the ID of the hospital to delete
     const MongoDoc = await this.store[locationType].findOne({
       name

@@ -73,10 +73,16 @@ module.exports = {
       { name, childrenMgt, moveTarget },
       { dataSources }
     ) => {
+      // get the doc of the ressource to delete (to have access to the id)
+      const ressourceForDeletion = await dataSources.mongoAPI.getOneHospital(
+        name
+      );
       // start by checking that there are indeed no children
       if (!childrenMgt) {
         // TODO: check that there are no children in Mongo
-        const childrenExist = true;
+        const childrenExist = await dataSources.mongoAPI.getWards(
+          ressourceForDeletion._id
+        );
         if (childrenExist) {
           return new Error("Precise what to do with the children");
         } else {
