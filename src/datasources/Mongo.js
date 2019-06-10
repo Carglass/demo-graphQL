@@ -37,19 +37,25 @@ class MongoAPI extends DataSource {
    * @returns {Object} returns an Hospital Object from Mongo
    */
   async getOneHospital(hospitalName) {
+    // GIFLENS-https://media3.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
     const hospital = await this.store.Hospital.findOne({ name: hospitalName });
     return hospital;
   }
 
   /**
+   // GIFLENS-https://media3.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
    * @param  {string} wardName
    * @returns {Object} returns a Ward Object from Mongo
    */
   async getOneWard(wardName) {
+    // GIFLENS-[object Object]
+    // GIFLENS-[object Object]
     const ward = await this.store.Ward.findOne({ name: wardName });
+    // GIFLENS-https://media3.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
     return ward;
   }
 
+  // GIFLENS-https://media3.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
   async getWards(hospitalId) {
     const wards = this.store.Ward.find(
       // if there is no parent precised, returns all wards

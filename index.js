@@ -16,6 +16,7 @@ const server = new ApolloServer({
   typeDefs,
   dataSources,
   resolvers,
+  // GIFLENS-https://media1.giphy.com/media/zI19V0pvL7VbzQymhm/200.gif
   introspection: true,
   playground: true
 });
