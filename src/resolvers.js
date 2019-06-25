@@ -5,11 +5,19 @@ const DEVICE_ADDED = "DEVICE_ADDED";
 
 module.exports = {
   Query: {
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
     organization: async (_, __, { dataSources }) => {
       const organization = {};
+      // GIFLENS-https://media2.giphy.com/media/pxwlYSM8PfY5y/200.gif
       organization.hospitals = await dataSources.mongoAPI.getHospitals();
       return organization;
     },
+    // GIFLENS-https://media0.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
+    // GIFLENS-https://media1.giphy.com/media/zI19V0pvL7VbzQymhm/200.gif
+    // GIFLENS-https://media1.giphy.com/media/zI19V0pvL7VbzQymhm/200.gif
+    // GIFLENS-https://media1.giphy.com/media/zI19V0pvL7VbzQymhm/200.gif
+    // GIFLENS-https://media2.giphy.com/media/pxwlYSM8PfY5y/200.gif
     hospital: async (_, { name }, { dataSources }) => {
       const hospital = await dataSources.mongoAPI.getOneHospital(name);
       return hospital;
@@ -65,6 +73,12 @@ module.exports = {
     addBed: async (_, { name, roomName }, { dataSources }) => {
       const bed = await dataSources.mongoAPI.createBed(name, roomName);
       return bed;
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
+    // GIFLENS-https://media0.giphy.com/media/dzaUX7CAG0Ihi/200.gif
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
+    // GIFLENS-https://media0.giphy.com/media/dzaUX7CAG0Ihi/200.gif
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
+    // GIFLENS-https://media1.giphy.com/media/Cmr1OMJ2FN0B2/200.gif
     },
     addDevice: async (_, { deviceType, bedName }, { dataSources }) => {
       const device = await dataSources.mongoAPI.createDevice(
